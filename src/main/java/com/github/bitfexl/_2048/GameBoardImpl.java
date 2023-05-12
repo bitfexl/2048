@@ -28,8 +28,8 @@ public class GameBoardImpl implements GameBoard {
         boolean changed;
 
         changed = compressTiles(dir);
-        changed = changed || mergeTiles(dir);
-        changed = changed || compressTiles(dir);
+        changed = mergeTiles(dir) || changed;
+        changed = compressTiles(dir) || changed;
 
         if (changed) {
             generateNewTile();
@@ -98,6 +98,16 @@ public class GameBoardImpl implements GameBoard {
 
         // highest should never be 0 as there always has to be at least one 2 or 4 tile
         return (int) Math.pow(2, highest);
+    }
+
+    @Override
+    public int getWidth() {
+        return board[0].length;
+    }
+
+    @Override
+    public int getHeight() {
+        return board.length;
     }
 
     /**
@@ -210,7 +220,8 @@ public class GameBoardImpl implements GameBoard {
 
         for (byte[] row : board) {
             for (int i = 0; i < row.length - 1; i++) {
-                if (row[i] == row[i + 1]) {
+                if (row[i] != 0 && row[i] == row[i + 1]) {
+                    changed = true;
                     row[i]++;
                     row[i + 1] = 0;
                     i++;

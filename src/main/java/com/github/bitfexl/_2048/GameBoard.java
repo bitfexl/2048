@@ -44,4 +44,16 @@ public interface GameBoard {
      * @return The value of the highest tile.
      */
     int getHighest();
+
+    /**
+     * The width (x).
+     * @return The game board with in tiles.
+     */
+    int getWidth();
+
+    /**
+     * The height (y).
+     * @return The game board height in tiles.
+     */
+    int getHeight();
 }

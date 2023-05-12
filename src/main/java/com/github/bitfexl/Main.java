@@ -20,6 +20,7 @@ public class Main {
             System.out.println();
         } while (!gameBoard.isGameOver());
 
+        gameVisualizer.update(gameBoard);
         System.out.println("GAME OVER! Highest tile: " + gameBoard.getHighest());
     }
 

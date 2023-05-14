@@ -1,7 +1,6 @@
 package com.github.bitfexl._2048;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GameBoardImpl implements GameBoard {
@@ -63,10 +62,13 @@ public class GameBoardImpl implements GameBoard {
 
     @Override
     public Object save() {
-        final byte[][] copy = new byte[board.length][];
+        final byte[] copy = new byte[board.length * board[0].length];
 
-        for (int i = 0; i < board.length; i++) {
-            copy[i] = Arrays.copyOf(board[i], board[i].length);
+        int i = 0;
+        for (byte[] row : board) {
+            for (byte field : row) {
+                copy[i++] = field;
+            }
         }
 
         return copy;
@@ -74,16 +76,25 @@ public class GameBoardImpl implements GameBoard {
 
     @Override
     public void load(Object state) {
-        board = (byte[][]) state;
+        final byte[] rawBoard = (byte[]) state;
+        final int w = board[0].length;
+
+        for (int i = 0; i < rawBoard.length; i++) {
+            board[i / w][i % w] = rawBoard[i];
+        }
     }
 
     @Override
     public int get(int x, int y) {
-        byte value = board[y][x];
+        byte value = getRaw(x, y);
         if (value == 0) {
             return 0;
         }
         return (int) Math.pow(2, value);
+    }
+
+    private byte getRaw(int x, int y) {
+        return board[y][x];
     }
 
     @Override

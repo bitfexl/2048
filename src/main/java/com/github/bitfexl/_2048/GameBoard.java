@@ -16,13 +16,16 @@ public interface GameBoard {
     boolean isGameOver();
 
     /**
-     * Save the board.
+     * Save the board. If the return value is a
+     * one dimensional array of bytes, then the solver will automatically
+     * optimize caching (equals and hashCode).
      * @return A state object, load must accept the same object.
      */
     Object save();
 
     /**
-     * Load a saved board.
+     * Load a saved board. The state object should remain
+     * untouched.
      * @param state The state object returned by save.
      */
     void load(Object state);

@@ -10,10 +10,13 @@ public class Main {
     public static void main(String[] args) {
         GameVisualizer gameVisualizer = new TerminalVisualizer(System.out);
         GameBoard gameBoard = new GameBoardImpl(4);
+        GameSolver gameSolver = new GameSolverImpl();
 
         do {
             gameVisualizer.update(gameBoard);
-            gameBoard.move(readMove());
+            // gameBoard.moveFull(readMove());
+            // stdin.nextLine();
+            gameBoard.moveFull(gameSolver.bestMove(gameBoard));
             System.out.println();
         } while (!gameBoard.isGameOver());
 

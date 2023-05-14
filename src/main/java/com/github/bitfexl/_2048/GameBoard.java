@@ -3,11 +3,38 @@ package com.github.bitfexl._2048;
 public interface GameBoard {
 
     /**
-     * Make a move.
+     * Make a move. Do not generate a new tile afterwards.
      * @param dir The direction in which to move.
      * @return true: move successful (board changed), false: board not changed;
      */
     boolean move(Direction dir);
+
+    /**
+     * Generate a tile.
+     * @param x The x cord of the new tile.
+     * @param y The y cord of the new tile.
+     * @param value The value of the tile (2 or 4).
+     * @return true: generated, false: field not empty;
+     */
+    boolean generateTile(int x, int y, int value);
+
+    /**
+     * Generate a new random tile.
+     * @return true: generated, false: not generated (game over);
+     */
+    boolean generateNewTile();
+
+    /**
+     * Make a full move. Move and then generate a new tile.
+     * @param dir The direction in which to move.
+     * @return true: move successful (board changed), false: board not changed;
+     */
+    default boolean moveFull(Direction dir) {
+        if (move(dir)) {
+            return generateNewTile();
+        }
+        return false;
+    }
 
     /**
      * Check if it is game over.

@@ -61,13 +61,13 @@ public class Gui extends JFrame implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            gameBoard.move(Direction.LEFT);
+            gameBoard.moveFull(Direction.LEFT);
         } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            gameBoard.move(Direction.UP);
+            gameBoard.moveFull(Direction.UP);
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            gameBoard.move(Direction.RIGHT);
+            gameBoard.moveFull(Direction.RIGHT);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            gameBoard.move(Direction.DOWN);
+            gameBoard.moveFull(Direction.DOWN);
         }
 
         getGameVisualizer().update(gameBoard);

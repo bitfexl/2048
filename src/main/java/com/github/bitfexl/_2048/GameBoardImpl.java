@@ -30,11 +30,51 @@ public class GameBoardImpl implements GameBoard {
         changed = mergeTiles(dir) || changed;
         changed = compressTiles(dir) || changed;
 
-        if (changed) {
-            generateNewTile();
+        return changed;
+    }
+
+    @Override
+    public boolean generateTile(int x, int y, int value) {
+        return generateTileRaw(x, y, (byte) (Math.log(value) / Math.log(2)), false);
+    }
+
+    /**
+     * Generate a tile.
+     * @param x The x cord of the new tile.
+     * @param y The y cord of the new tile.
+     * @param exponent The exponent with base 2 of the value.
+     * @param override Override the field even if not empty. If set, will always return true.
+     * @return true: generated, false: field not empty;
+     */
+    public boolean generateTileRaw(int x, int y, byte exponent, boolean override) {
+        if (board[y][x] == 0) {
+            board[y][x] = exponent;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean generateNewTile() {
+        final List<XY> available = new ArrayList<>();
+
+        for (byte x = 0; x < board[0].length; x++) {
+            for (byte y = 0; y < board.length; y++) {
+                if (board[y][x] == 0) {
+                    available.add(new XY(x, y));
+                }
+            }
         }
 
-        return changed;
+        if (available.isEmpty()) {
+            return false;
+        }
+
+        final XY xy = available.get((int)(Math.random() * available.size()));
+        // 10% chance of being a 4 else a 2
+        board[xy.y][xy.x] = Math.random() <= 0.1 ? (byte) 2 : (byte) 1;
+
+        return true;
     }
 
     @Override
@@ -244,30 +284,4 @@ public class GameBoardImpl implements GameBoard {
     }
 
     private record XY(byte x, byte y) { }
-
-    /**
-     * Generate a new tile.
-     * @return true: generated, false: not space left -> game over;
-     */
-    protected boolean generateNewTile() {
-        final List<XY> available = new ArrayList<>();
-
-        for (byte x = 0; x < board[0].length; x++) {
-            for (byte y = 0; y < board.length; y++) {
-                if (board[y][x] == 0) {
-                    available.add(new XY(x, y));
-                }
-            }
-        }
-
-        if (available.isEmpty()) {
-            return false;
-        }
-
-        final XY xy = available.get((int)(Math.random() * available.size()));
-        // 10% chance of being a 4 else a 2
-        board[xy.y][xy.x] = Math.random() <= 0.1 ? (byte) 2 : (byte) 1;
-
-        return true;
-    }
 }

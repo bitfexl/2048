@@ -1,5 +1,6 @@
 package com.github.bitfexl._2048.gui;
 
+import com.github.bitfexl._2048.Direction;
 import com.github.bitfexl._2048.GameBoard;
 import com.github.bitfexl._2048.GameBoardImpl;
 import com.github.bitfexl._2048.GameVisualizer;
@@ -60,13 +61,13 @@ public class Gui extends JFrame implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            gameBoard.move(GameBoard.Direction.LEFT);
+            gameBoard.move(Direction.LEFT);
         } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            gameBoard.move(GameBoard.Direction.UP);
+            gameBoard.move(Direction.UP);
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            gameBoard.move(GameBoard.Direction.RIGHT);
+            gameBoard.move(Direction.RIGHT);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            gameBoard.move(GameBoard.Direction.DOWN);
+            gameBoard.move(Direction.DOWN);
         }
 
         getGameVisualizer().update(gameBoard);

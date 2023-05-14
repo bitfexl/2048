@@ -1,9 +1,6 @@
 package com.github.bitfexl;
 
-import com.github.bitfexl._2048.GameBoard;
-import com.github.bitfexl._2048.GameBoardImpl;
-import com.github.bitfexl._2048.GameVisualizer;
-import com.github.bitfexl._2048.TerminalVisualizer;
+import com.github.bitfexl._2048.*;
 
 import java.util.Scanner;
 
@@ -24,15 +21,15 @@ public class Main {
         System.out.println("GAME OVER! Highest tile: " + gameBoard.getHighest());
     }
 
-    private static GameBoard.Direction readMove() {
+    private static Direction readMove() {
         while (true) {
             System.out.print("Enter move (l, u, r, d): ");
 
             switch (stdin.nextLine().charAt(0)) {
-                case 'l': return GameBoard.Direction.LEFT;
-                case 'u': return GameBoard.Direction.UP;
-                case 'r': return GameBoard.Direction.RIGHT;
-                case 'd': return GameBoard.Direction.DOWN;
+                case 'l': return Direction.LEFT;
+                case 'u': return Direction.UP;
+                case 'r': return Direction.RIGHT;
+                case 'd': return Direction.DOWN;
             }
         }
     }

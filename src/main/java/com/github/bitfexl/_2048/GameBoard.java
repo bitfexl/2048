@@ -1,9 +1,6 @@
 package com.github.bitfexl._2048;
 
 public interface GameBoard {
-    enum Direction {
-        UP, RIGHT, DOWN, LEFT
-    }
 
     /**
      * Make a move.

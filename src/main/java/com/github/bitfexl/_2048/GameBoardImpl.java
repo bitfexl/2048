@@ -133,7 +133,13 @@ public class GameBoardImpl implements GameBoard {
         return (int) Math.pow(2, value);
     }
 
-    private byte getRaw(int x, int y) {
+    /**
+     * Get a tile.
+     * @param x The x cord of the tile.
+     * @param y The y cord of the tile.
+     * @return The exponent with base 2 of the value or 0 if empty.
+     */
+    public byte getRaw(int x, int y) {
         return board[y][x];
     }
 

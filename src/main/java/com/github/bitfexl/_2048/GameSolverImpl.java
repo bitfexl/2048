@@ -111,7 +111,7 @@ public class GameSolverImpl implements GameSolver {
     }
 
     private double calculateScore(GameBoard board) {
-        return 2 * board.getHighest() + emptyFields(board);
+        return 2 * board.getHighest() + emptyFields(board) + mergeOpportunities(board);
     }
 
     /* ***** SCORE EVALUATORS ***** */
@@ -127,6 +127,39 @@ public class GameSolverImpl implements GameSolver {
         }
 
         return emptyFields;
+    }
+
+    private int mergeOpportunities(GameBoard board) {
+        int opportunities = 0;
+
+        GameBoardImpl gbi = null;
+        if (board instanceof GameBoardImpl gbi1) {
+            gbi = gbi1;
+        }
+
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight() - 1; y++) {
+                final int value1 = gbi != null ? gbi.getRaw(x, y) : board.get(x, y);
+                final int value2 = gbi != null ? gbi.getRaw(x, y + 1) : board.get(x, y + 1);
+
+                if (value1 != 0 && value1 == value2) {
+                    opportunities++;
+                }
+            }
+        }
+
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth() - 1; x++) {
+                final int value1 = gbi != null ? gbi.getRaw(x, y) : board.get(x, y);
+                final int value2 = gbi != null ? gbi.getRaw(x + 1, y) : board.get(x + 1, y);
+
+                if (value1 != 0 && value1 == value2) {
+                    opportunities++;
+                }
+            }
+        }
+
+        return opportunities;
     }
 
     // save object: depth: score

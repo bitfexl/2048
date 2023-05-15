@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class SolverServer {
     private final GameBoardImpl gameBoard = new GameBoardImpl(4);
-    private final GameSolver gameSolver = new GameSolverImpl();
+    private final GameSolverImpl gameSolver = new GameSolverImpl();
 
     private final Gson gson = new Gson();
 
@@ -54,6 +54,7 @@ public class SolverServer {
             exchange.sendResponseHeaders(404, -1);
         }
         exchange.close();
+        System.out.println("Cache: " + gameSolver.getMinCacheSize() + " b = " + gameSolver.getMinCacheSize() * (1.0/1000000) + " mb");
     }
 
     public void start() {

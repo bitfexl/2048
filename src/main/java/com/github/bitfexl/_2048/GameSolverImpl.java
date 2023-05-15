@@ -101,11 +101,13 @@ public class GameSolverImpl implements GameSolver {
         } else {
             scores = new HashMap<>();
             scoresCache.put(cacheKey, scores);
+            minCacheSize += 16;
         }
 
         final double score = getScore(board, depth, save);
 
         scores.put(depth, score);
+        minCacheSize += 12;
 
         return score;
     }
@@ -164,6 +166,15 @@ public class GameSolverImpl implements GameSolver {
 
     // save object: depth: score
     private final Map<Object, Map<Integer, Double>> scoresCache = new HashMap<>();
+
+    /**
+     * Min cache size in bytes.
+     */
+    private int minCacheSize = 0;
+
+    public int getMinCacheSize() {
+        return minCacheSize;
+    }
 
     private record ByteArrayWrapper(byte[] value) {
         @Override

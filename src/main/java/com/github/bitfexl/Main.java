@@ -1,6 +1,7 @@
 package com.github.bitfexl;
 
 import com.github.bitfexl._2048.*;
+import com.github.bitfexl._2048.gui.Gui;
 
 import java.util.Scanner;
 
@@ -8,16 +9,18 @@ public class Main {
     private static final Scanner stdin = new Scanner(System.in);
 
     public static void main(String[] args) {
-        GameVisualizer gameVisualizer = new TerminalVisualizer(System.out);
+//        GameVisualizer gameVisualizer = new TerminalVisualizer(System.out);
+        GameVisualizer gameVisualizer = new Gui().getGameVisualizer();
         GameBoard gameBoard = new GameBoardImpl(4);
         GameSolver gameSolver = new GameSolverImpl();
 
         do {
             gameVisualizer.update(gameBoard);
             // gameBoard.moveFull(readMove());
-            // stdin.nextLine();
             gameBoard.moveFull(gameSolver.bestMove(gameBoard));
-            System.out.println();
+            if (gameVisualizer instanceof TerminalVisualizer) {
+                System.out.println();
+            }
         } while (!gameBoard.isGameOver());
 
         gameVisualizer.update(gameBoard);

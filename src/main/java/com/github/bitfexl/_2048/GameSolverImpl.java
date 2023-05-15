@@ -14,7 +14,7 @@ public class GameSolverImpl implements GameSolver {
 
         for (Direction move : Direction.values()) {
             if (board.move(move)) {
-                double score = getScore(board, 3, null);
+                double score = getScoreWithCache(board, 4);
 
                 if (score > bestScore) {
                     bestScore = score;
@@ -58,7 +58,7 @@ public class GameSolverImpl implements GameSolver {
                     } else {
                         board.generateTile(x, y, 2);
                     }
-                    moveScore += 0.9 * getScore(board, depth - 1, null);
+                    moveScore += 0.9 * getScoreWithCache(board, depth - 1);
 
                     // generate 4 with 10% probability
                     if (board instanceof GameBoardImpl gbi) {
@@ -67,7 +67,7 @@ public class GameSolverImpl implements GameSolver {
                         board.load(save);
                         board.generateTile(x, y, 4);
                     }
-                    moveScore += 0.1 * getScore(board, depth - 1, null);
+                    moveScore += 0.1 * getScoreWithCache(board, depth - 1);
 
                     bestMoveScore = Math.max(bestMoveScore, moveScore);
 
@@ -81,32 +81,56 @@ public class GameSolverImpl implements GameSolver {
         return totalScore;
     }
 
-    private double getScore(GameBoard board, Object save) {
-        // todo: integrate
-        if (save == null) {
-            save = board.save();
-        }
+    private double getScoreWithCache(GameBoard board, int depth) {
+        final Object save = board.save();
+        final Object cacheKey;
 
         if (save instanceof byte[] bytes) {
-            save = new ByteArrayWrapper(bytes);
+            cacheKey = new ByteArrayWrapper(bytes);
+        } else {
+            cacheKey = save;
         }
 
-        Double score = scoresCache.get(save);
-        if (score != null) {
-            return score;
+        Map<Integer, Double> scores = scoresCache.get(cacheKey);
+        if (scores != null) {
+            // depth needs to be the same for each move (left, up, right, down) because the score will increase with depth
+            final Double score = scores.get(depth);
+            if (score != null) {
+                return score;
+            }
+        } else {
+            scores = new HashMap<>();
+            scoresCache.put(cacheKey, scores);
         }
 
-        score = calculateScore(board);
-        scoresCache.put(save, score);
+        final double score = getScore(board, depth, save);
+
+        scores.put(depth, score);
 
         return score;
     }
 
     private double calculateScore(GameBoard board) {
-        return board.getHighest();
+        return 2 * board.getHighest() + emptyFields(board);
     }
 
-    private final Map<Object, Double> scoresCache = new HashMap<>();
+    /* ***** SCORE EVALUATORS ***** */
+    private int emptyFields(GameBoard board) {
+        int emptyFields = 0;
+
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                if (board.get(x, y) == 0) {
+                    emptyFields++;
+                }
+            }
+        }
+
+        return emptyFields;
+    }
+
+    // save object: depth: score
+    private final Map<Object, Map<Integer, Double>> scoresCache = new HashMap<>();
 
     private record ByteArrayWrapper(byte[] value) {
         @Override

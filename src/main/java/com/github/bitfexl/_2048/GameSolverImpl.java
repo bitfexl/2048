@@ -112,7 +112,20 @@ public class GameSolverImpl implements GameSolver {
     }
 
     private double calculateScore(GameBoard board) {
-        return 2 * board.getHighest() + emptyFields(board) + mergeOpportunities(board);
+        GameBoardImpl gbi = null;
+        if (board instanceof GameBoardImpl gbi1) {
+            gbi = gbi1;
+        }
+
+        final int highest = board.getHighest();
+        final int emptyFields = emptyFields(board);
+        final int mergeOpportunities = mergeOpportunities(board);
+        final int sequences = gbi != null ? sequences(gbi) : 0;
+
+        return 2 * highest +
+                3 * emptyFields +
+                mergeOpportunities +
+                3 * sequences;
     }
 
     /* ***** SCORE EVALUATORS ***** */
@@ -161,6 +174,53 @@ public class GameSolverImpl implements GameSolver {
         }
 
         return opportunities;
+    }
+
+    private int sequences(GameBoardImpl board) {
+        // Count the number of sequences:
+        // 16, 8, 4, 2, ...
+        // add the square of the sequence to reward longer sequences
+
+        int sequences = 0;
+
+        final int w = board.getWidth();
+        final int h = board.getHeight();
+
+        int sequence = 0;
+
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h - 1; y++) {
+                final byte value1 = board.getRaw(x, y);
+                final byte value2 = board.getRaw(x, y + 1);
+
+                if (value1 - value2 == 1) {
+                    sequence++;
+                } else {
+                    break;
+                }
+            }
+
+            sequences += sequence * sequence;
+            sequence = 0;
+        }
+
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth() - 1; x++) {
+                final byte value1 = board.getRaw(x, y);
+                final byte value2 = board.getRaw(x + 1, y);
+
+                if (value1 - value2 == 1) {
+                    sequence++;
+                } else {
+                    break;
+                }
+            }
+
+            sequences += sequence * sequence;
+            sequence = 0;
+        }
+
+        return sequences;
     }
 
     // save object: depth: score

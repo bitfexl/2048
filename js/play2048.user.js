@@ -74,8 +74,8 @@
 
     while (true) {
         if (localStorage.getItem("gameState") == null) {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
             await clearCache();
+            await new Promise((resolve) => setTimeout(resolve, 4000));
             restart();
         }
 

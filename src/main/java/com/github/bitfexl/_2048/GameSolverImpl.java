@@ -175,6 +175,7 @@ public class GameSolverImpl implements GameSolver {
 
     public void clearCache() {
         scoresCache.clear();
+        System.gc();
     }
 
     private record ByteArrayWrapper(byte[] value) {

@@ -173,6 +173,10 @@ public class GameSolverImpl implements GameSolver {
         }
     };
 
+    public void clearCache() {
+        scoresCache.clear();
+    }
+
     private record ByteArrayWrapper(byte[] value) {
         @Override
         public boolean equals(Object o) {

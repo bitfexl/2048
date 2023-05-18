@@ -50,6 +50,10 @@ public class SolverServer {
             exchange.sendResponseHeaders(responseCode, response.length);
 
             exchange.getResponseBody().write(response);
+        } else if (exchange.getRequestURI().toString().equals("/clearCache")) {
+            gameSolver.clearCache();
+
+            exchange.sendResponseHeaders(200, -1);
         } else {
             exchange.sendResponseHeaders(404, -1);
         }

@@ -56,11 +56,26 @@
         });
     }
 
+    async function clearCache() {
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: "http://localhost:3000/clearCache",
+                onload: resolve,
+            });
+        });
+    }
+
+    function restart() {
+        document.querySelector("body > div.container > div.above-game > a").click();
+    }
+
     setTimeout(restart, 100);
 
     while (true) {
         if (localStorage.getItem("gameState") == null) {
             await new Promise((resolve) => setTimeout(resolve, 2000));
+            await clearCache();
             restart();
         }
 
@@ -76,9 +91,5 @@
         console.log(move);
 
         window.game.emit("move", moves[move]);
-    }
-
-    function restart() {
-        document.querySelector("body > div.container > div.above-game > a").click();
     }
 })();

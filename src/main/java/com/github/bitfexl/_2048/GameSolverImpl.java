@@ -2,6 +2,7 @@ package com.github.bitfexl._2048;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GameSolverImpl implements GameSolver {
@@ -101,13 +102,11 @@ public class GameSolverImpl implements GameSolver {
         } else {
             scores = new HashMap<>();
             scoresCache.put(cacheKey, scores);
-            minCacheSize += 16;
         }
 
         final double score = getScore(board, depth, save);
 
         scores.put(depth, score);
-        minCacheSize += 12;
 
         return score;
     }
@@ -165,16 +164,14 @@ public class GameSolverImpl implements GameSolver {
     }
 
     // save object: depth: score
-    private final Map<Object, Map<Integer, Double>> scoresCache = new HashMap<>();
-
-    /**
-     * Min cache size in bytes.
-     */
-    private int minCacheSize = 0;
-
-    public int getMinCacheSize() {
-        return minCacheSize;
-    }
+    private final Map<Object, Map<Integer, Double>> scoresCache = new LinkedHashMap<>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Object, Map<Integer, Double>> eldest) {
+            // seems to be a good compromise between speed and memory consumption
+            // max memory consumption of program is around 600 to 700 MB
+            return size() > 100000;
+        }
+    };
 
     private record ByteArrayWrapper(byte[] value) {
         @Override

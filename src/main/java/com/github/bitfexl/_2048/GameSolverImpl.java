@@ -1,6 +1,5 @@
 package com.github.bitfexl._2048;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -112,20 +111,22 @@ public class GameSolverImpl implements GameSolver {
     }
 
     private double calculateScore(GameBoard board) {
-        GameBoardImpl gbi = null;
-        if (board instanceof GameBoardImpl gbi1) {
-            gbi = gbi1;
-        }
+//        GameBoardImpl gbi = null;
+//        if (board instanceof GameBoardImpl gbi1) {
+//            gbi = gbi1;
+//        }
+//
+//        final int highest = board.getHighest();
+//        final int emptyFields = emptyFields(board);
+//        final int mergeOpportunities = mergeOpportunities(board);
+//        final int sequences = gbi != null ? sequences(gbi) : 0;
 
-        final int highest = board.getHighest();
-        final int emptyFields = emptyFields(board);
-        final int mergeOpportunities = mergeOpportunities(board);
-        final int sequences = gbi != null ? sequences(gbi) : 0;
+//        return 2 * highest +
+//                3 * emptyFields +
+//                mergeOpportunities +
+//                3 * sequences;
 
-        return 2 * highest +
-                3 * emptyFields +
-                mergeOpportunities +
-                3 * sequences;
+        return board.getScore();
     }
 
     /* ***** SCORE EVALUATORS ***** */
@@ -236,20 +237,5 @@ public class GameSolverImpl implements GameSolver {
     public void clearCache() {
         scoresCache.clear();
         System.gc();
-    }
-
-    private record ByteArrayWrapper(byte[] value) {
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ByteArrayWrapper that = (ByteArrayWrapper) o;
-            return Arrays.equals(value, that.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(value);
-        }
     }
 }

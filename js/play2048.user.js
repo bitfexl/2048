@@ -40,7 +40,12 @@
             }
         }
 
-        return bytesSaveStateHorizontal;
+        return {
+            score: gameState.score,
+            board: {
+                value: bytesSaveStateHorizontal,
+            },
+        };
     }
 
     async function requestMove(boardArr) {

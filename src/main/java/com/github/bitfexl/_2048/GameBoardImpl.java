@@ -2,6 +2,7 @@ package com.github.bitfexl._2048;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GameBoardImpl implements GameBoard {
     /**
@@ -9,6 +10,8 @@ public class GameBoardImpl implements GameBoard {
      * except for 0 (empty), which is 0.
      */
     protected byte[][] board;
+
+    private int score;
 
     public GameBoardImpl(int size) {
         if (size > Byte.MAX_VALUE) {
@@ -100,6 +103,21 @@ public class GameBoardImpl implements GameBoard {
         return true;
     }
 
+    public record SaveObject(int score, ByteArrayWrapper board) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SaveObject that = (SaveObject) o;
+            return score == that.score && board.equals(that.board);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(score, board);
+        }
+    }
+
     @Override
     public Object save() {
         final byte[] copy = new byte[board.length * board[0].length];
@@ -111,12 +129,16 @@ public class GameBoardImpl implements GameBoard {
             }
         }
 
-        return copy;
+        return new SaveObject(score, new ByteArrayWrapper(copy));
     }
 
     @Override
     public void load(Object state) {
-        final byte[] rawBoard = (byte[]) state;
+        SaveObject saveObject = (SaveObject) state;
+
+        score = saveObject.score();
+
+        final byte[] rawBoard = saveObject.board().value();
         final int w = board[0].length;
 
         for (int i = 0; i < rawBoard.length; i++) {
@@ -165,6 +187,16 @@ public class GameBoardImpl implements GameBoard {
     @Override
     public int getHeight() {
         return board.length;
+    }
+
+    @Override
+    public int getScore() {
+        return score;
+    }
+
+    @Override
+    public void setScore(int score) {
+        this.score = score;
     }
 
     /**
@@ -280,6 +312,7 @@ public class GameBoardImpl implements GameBoard {
                 if (row[i] != 0 && row[i] == row[i + 1]) {
                     changed = true;
                     row[i]++;
+                    score += Math.pow(2, row[i]);
                     row[i + 1] = 0;
                     i++;
                 }

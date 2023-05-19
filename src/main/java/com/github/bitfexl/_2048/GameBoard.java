@@ -43,9 +43,8 @@ public interface GameBoard {
     boolean isGameOver();
 
     /**
-     * Save the board. If the return value is a
-     * one dimensional array of bytes, then the solver will automatically
-     * optimize caching (equals and hashCode).
+     * Save the board. The save object should implement
+     * equals and hashCode. The score should also be saved.
      * @return A state object, load must accept the same object.
      */
     Object save();
@@ -83,4 +82,18 @@ public interface GameBoard {
      * @return The game board height in tiles.
      */
     int getHeight();
+
+    /**
+     * Get the boards score.
+     * The score gets incremented every time two
+     * tiles are merged by the value of the resulting tile.
+     * @return The current score.
+     */
+    int getScore();
+
+    /**
+     * Set the boards score.
+     * @param score The new score.
+     */
+    void setScore(int score);
 }

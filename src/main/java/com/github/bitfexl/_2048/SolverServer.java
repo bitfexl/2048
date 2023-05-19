@@ -36,7 +36,7 @@ public class SolverServer {
             int responseCode = 200;
 
             try {
-                byte[] save = gson.fromJson(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8), byte[].class);
+                GameBoardImpl.SaveObject save = gson.fromJson(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8), GameBoardImpl.SaveObject.class);
                 gameBoard.load(save);
                 final Direction bestMove = gameSolver.bestMove(gameBoard);
                 response = bestMove.toString().getBytes(StandardCharsets.UTF_8);
